@@ -1,16 +1,30 @@
 import PyQt5.QtWidgets as qtw
+from PyQt5.QtGui import QKeySequence
 from PyQt5 import QtCore
-from osh_vault.movie_card import movie_card
+from osh_vault.movie_card import MovieCard
+import json
+import os
+
+with open('config.json', 'r') as f:
+	config = json.load(f)
 
 class MainWindow(qtw.QWidget):
 	def __init__(self):
 		super().__init__()
 		self.setWindowTitle("Osh Vault")
 		self.setLayout(qtw.QVBoxLayout())
+		self.key_shortcuts()
 		self.navbar()
 		self.movies()
 
+
 		self.show()
+		print(self.layout().count())
+
+	def key_shortcuts(self):
+		self.shortcut_close = qtw.QShortcut(QKeySequence('Ctrl+W'), self)
+		self.shortcut_close.activated.connect(lambda : app.quit())
+
 	def navbar(self):
 		container = qtw.QWidget()
 		container.setLayout(qtw.QHBoxLayout())
@@ -32,10 +46,23 @@ class MainWindow(qtw.QWidget):
 	def movies(self):
 		container = qtw.QWidget()
 		container.setLayout(qtw.QGridLayout())
-		movie = movie_card()
-		movie2 = movie_card()
-		container.layout().addWidget(movie,0,0,1,1)
-		container.layout().addWidget(movie2,0,1,1,1)
+		# movie = MovieCard("Movie").get_widget()
+		# movie2 = MovieCard("Movie 1").get_widget()
+		# container.layout().addWidget(movie,0,0,1,1)
+		# container.layout().addWidget(movie2,0,1,1,1)
+
+		column = 0
+		row = 0
+		for i, _file in enumerate(os.listdir(config["BASE_DIR"])):
+			movie = MovieCard(_file).get_widget()
+
+			if column > 4:
+				column = 0
+				row += 1
+
+			container.layout().addWidget(movie,row,column,1,1)
+			column += 1
+
 		self.layout().addWidget(container)
 
 
