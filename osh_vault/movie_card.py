@@ -1,5 +1,5 @@
 import PyQt5.QtWidgets as qtw
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QFont
 from PyQt5 import QtCore
 import os
 
@@ -25,6 +25,7 @@ class MovieCard:
 		self.container.setLayout(qtw.QVBoxLayout())
 		self.path = os.path.dirname(os.path.abspath(__file__))
 		self.set_image()
+		self.title_font_size = 9
 		self.set_title(_title)
 
 	def set_image(self):
@@ -35,8 +36,12 @@ class MovieCard:
 		self.container.layout().addWidget(label)
 
 	def set_title(self, _title):
-		title = qtw.QLabel(text=_title)
-		title.setStyleSheet("QLabel {color: red;}")
+		if len(_title)*9 > 340:
+			end_index = int((len(_title)*9 - 340+20)/9)
+			_title = _title[0:-end_index]
+		title = qtw.QLabel(text=f"{_title} ...")
+		title.setStyleSheet("QLabel {color: Blue;}")
+		title.setFont(QFont("Arial",self.title_font_size))
 		self.container.layout().addWidget(title)
 
 	def get_widget(self):
