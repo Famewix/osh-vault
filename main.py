@@ -1,10 +1,11 @@
 import PyQt5.QtWidgets as qtw
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtGui import QKeySequence, QIcon
 from PyQt5 import QtCore
 from osh_vault.movie_card import MovieCard
 import json
-import os
+import os, sys
 
+path = os.path.dirname(os.path.abspath(__file__))
 with open('config.json', 'r') as f:
 	config = json.load(f)
 
@@ -28,12 +29,16 @@ class MainWindow(qtw.QWidget):
 	def navbar(self):
 		container = qtw.QWidget()
 		container.setLayout(qtw.QHBoxLayout())
-		home_btn = qtw.QPushButton("Home")
+		
+		home_btn = qtw.QPushButton()
+		home_btn.setIcon(QIcon("res\\home.png"))
 		movies_btn = qtw.QPushButton("Movies")
 		gallery_btn = qtw.QPushButton("Gallery")
 		favorite_btn = qtw.QPushButton("Favorites")
 		studio_btn = qtw.QPushButton("Studios")
-		settings_btn = qtw.QPushButton("Settings")
+		settings_btn = qtw.QPushButton()
+		settings_btn.setIcon(QIcon("res\\gear.png"))
+		settings_btn.clicked.connect(self.open_settings)
 
 		container.layout().addWidget(home_btn)
 		container.layout().addWidget(movies_btn)
@@ -43,13 +48,15 @@ class MainWindow(qtw.QWidget):
 		container.layout().addWidget(settings_btn)
 		self.layout().addWidget(container)
 
+	def open_settings(self):
+		if sys.platform == 'win32':
+			os.system("config.json")
+		else:
+			os.system("open config.json")
+
 	def movies(self):
 		container = qtw.QWidget()
 		container.setLayout(qtw.QGridLayout())
-		# movie = MovieCard("Movie").get_widget()
-		# movie2 = MovieCard("Movie 1").get_widget()
-		# container.layout().addWidget(movie,0,0,1,1)
-		# container.layout().addWidget(movie2,0,1,1,1)
 
 		column = 0
 		row = 0
