@@ -30,7 +30,7 @@ class MovieCard:
 
 	def set_image(self):
 		label = qtw.QLabel()
-		pixmap = QPixmap(os.path.join(self.path, '..\\res\\wd-poster.jpg'))
+		pixmap = QPixmap(os.path.join(self.path, os.path.join(*['..', 'res', 'wd-poster.jpg'])))
 		pixmap2 = pixmap.scaled(340, 340, QtCore.Qt.KeepAspectRatio)
 		label.setPixmap(pixmap2)
 		self.container.layout().addWidget(label)
