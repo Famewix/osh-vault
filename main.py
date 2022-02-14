@@ -23,6 +23,13 @@ class MainWindow(qtw.QWidget):
         self.show()
         print(self.layout().count())
 
+    def location_on_the_screen(self):    
+        screen = qtw.QDesktopWidget().screenGeometry()
+        widget = self.geometry()
+        x = screen.width() - widget.width() - 30
+        y = screen.height() - widget.height() - 30
+        self.move(x, y)
+
     def key_shortcuts(self):
         self.shortcut_close = qtw.QShortcut(QKeySequence('Ctrl+W'), self)
         self.shortcut_close.activated.connect(lambda : app.quit())
@@ -63,7 +70,9 @@ class MainWindow(qtw.QWidget):
         column = 0
         row = 0
         for i, _file in enumerate(os.listdir(config["BASE_DIR"])):
-            movie = MovieCard(_file).get_widget()
+            abs_file_path = os.path.join(config["BASE_DIR"], _file)
+            # print(abs_file_path)
+            movie = MovieCard(_file, abs_file_path).get_widget()
 
             if column > 4:
                 column = 0
@@ -77,5 +86,6 @@ class MainWindow(qtw.QWidget):
 
 app = qtw.QApplication([])
 mw = MainWindow()
+mw.location_on_the_screen()
 app.setStyle(qtw.QStyleFactory.create('Fusion'))
 app.exec_()
